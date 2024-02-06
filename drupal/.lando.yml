@@ -1,0 +1,7 @@
+name: va-spruce
+recipe: lamp
+config:
+  webroot: web
+services:
+  appserver:
+    type: php:8.2

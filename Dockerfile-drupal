@@ -1,0 +1,21 @@
+FROM drupal:10.2.2-php8.2-apache
+
+RUN apt-get update && apt-get install git -y
+
+WORKDIR /opt/drupal/
+
+COPY ./drupal/composer.json .
+COPY ./drupal/composer.lock .
+
+RUN rm -rf ./vendor && composer install --no-scripts
+
+COPY ./drupal/web/modules/custom/ ./web/modules/custom
+COPY ./drupal/web/themes/custom/ ./web/themes/custom
+COPY ./drupal/web/sites/default/ ./web/sites/default
+COPY ./drupal/config/ ./config
+
+COPY ./scripts/initentrypoint.sh /opt/initentrypoint.sh
+
+RUN ["chmod", "+x", "/opt/initentrypoint.sh"]
+
+RUN mkdir -p /src/drupal && cp -rR /opt/drupal /src
