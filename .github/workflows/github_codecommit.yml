@@ -1,0 +1,30 @@
+name: Push to AWS CodeCommit VA Spruce
+
+on:
+  push:
+    tags-ignore:
+      - '*'
+    branches:
+      - 'master'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@main
+        with:
+          aws-access-key-id: ${{ secrets.VASPRUCE_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.VASPRUCE_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Push to CodeCommit - VA Spruce
+        uses: Trevital/sync-up-to-codecommit-action@master
+        with:
+          repository_name: VASpruceDrupal
+          aws_region: us-east-2
